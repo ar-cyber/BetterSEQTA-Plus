@@ -2264,8 +2264,7 @@ export async function loadHomePage() {
   // Gets all subjects for the student
   for (let i = 0; i < classes.length; i++) {
     const element = classes[i];
-    
-    if (element.hasOwnProperty("active")) {
+    if (Object.prototype.hasOwnProperty.call(element, "active")) {
       // Finds the active class list with the current subjects
       activeClass = classes[i]
     }
