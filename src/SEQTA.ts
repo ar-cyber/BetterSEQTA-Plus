@@ -2076,7 +2076,7 @@ export async function loadHomePage() {
   const Timetable = stringToHTML(/* html */`
     <div class="timetable-container border" ${settingsState.animations ? `style="opacity: 0;"` : ''}>
       <div class="home-subtitle">
-        <h2 id="home-lesson-subtitle">Today\'s Lessons</h2>
+        <h2 id="home-lesson-subtitle">Today's Lessons</h2>
         <div class="timetable-arrows">
           <svg width="24" height="24" viewBox="0 0 24 24" style="transform: scale(-1,1)" id="home-timetable-back"><g style="fill: currentcolor;"><path d="M8.578 16.359l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z"></path></g></svg>
           <svg width="24" height="24" viewBox="0 0 24 24" id="home-timetable-forward"><g style="fill: currentcolor;"><path d="M8.578 16.359l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z"></path></g></svg>
