@@ -2218,6 +2218,7 @@ export async function loadHomePage() {
 
   const labelArray = response.payload.filter((item: any) => item.name === 'notices.filters').map((item: any) => item.value)
   function onInputChange(e: any) {
+    const xhr2 = new XMLHttpRequest()
     xhr2.open('POST', `${location.origin}/seqta/student/load/notices?`, true);
     xhr2.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
     xhr2.send(JSON.stringify({ date: e.target.value }));
