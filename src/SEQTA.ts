@@ -298,8 +298,8 @@ export function OpenWhatsNewPopup() {
   container.append(header)
   container.append(imagecont)
   container.append(textcontainer)
-  container.append(text as ChildNode)
-  container.append(footer as ChildNode)
+  container.append(text)
+  container.append(footer)
   container.append(exitbutton)
 
   background.append(container)
