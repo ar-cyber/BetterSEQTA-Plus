@@ -2217,7 +2217,17 @@ export async function loadHomePage() {
   const response = await GetPrefs.json()
 
   const labelArray = response.payload.filter((item: any) => item.name === 'notices.filters').map((item: any) => item.value)
-
+  function onInputChange(e: any) {
+    xhr2.open('POST', `${location.origin}/seqta/student/load/notices?`, true);
+    xhr2.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    xhr2.send(JSON.stringify({ date: e.target.value }));
+    
+    xhr2.onreadystatechange = function () {
+      if (xhr2.readyState === 4) {
+        processNotices(xhr2.response, labelArray);
+      }
+    };
+  }
   if (labelArray.length !== 0) {
     const labelArray = response.payload.filter((item: any) => item.name === 'notices.filters').map((item: any) => item.value)[0].split(' ')
     const xhr2 = new XMLHttpRequest()
@@ -2237,17 +2247,7 @@ export async function loadHomePage() {
     const dateControl = document.querySelector('input[type="date"]') as HTMLInputElement;
     xhr2.send(JSON.stringify({ date: dateControl.value }));
   
-    function onInputChange(e: any) {
-      xhr2.open('POST', `${location.origin}/seqta/student/load/notices?`, true);
-      xhr2.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr2.send(JSON.stringify({ date: e.target.value }));
-    
-      xhr2.onreadystatechange = function () {
-        if (xhr2.readyState === 4) {
-          processNotices(xhr2.response, labelArray);
-        }
-      };
-    }
+
     
     dateControl.addEventListener('input', onInputChange);
   }
