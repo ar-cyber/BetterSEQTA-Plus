@@ -112,7 +112,7 @@ browser.runtime.onMessage.addListener((request: any, _sender: any, sendResponse:
       '-' +
       (date.getDate() - 5);
 
-    const url = `https://newsapi.org/v2/everything?domains=abc.net.au&from=${from}&apiKey=17c0da766ba347c89d094449504e3080`;
+    const url = `https://newsfinder.sockycat.net/news/get/${location}`;
 
     GetNews(sendResponse, url);
     return true;
