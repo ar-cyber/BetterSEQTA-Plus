@@ -2562,7 +2562,7 @@ export async function SendNewsPage() {
   const html = stringToHTML(/* html */`
     <div class="home-root">
       <div class="home-container" id="news-container">
-        <h1 class="border">Latest Headlines - ABC News</h1>
+        <h1 class="border">Latest Headlines</h1>
       </div>
     </div>`)
 
@@ -2572,7 +2572,7 @@ export async function SendNewsPage() {
   (titlediv! as HTMLElement).innerText = 'News'
   AppendLoadingSymbol('newsloading', '#news-container')
 
-  const response = await browser.runtime.sendMessage({ type: 'sendNews' })
+  const response = await browser.runtime.sendMessage({ type: 'sendNews',  })
   const newscontainer = document.querySelector('#news-container')
   document.getElementById('newsloading')?.remove()
 
