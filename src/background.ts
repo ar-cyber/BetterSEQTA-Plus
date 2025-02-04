@@ -1,5 +1,6 @@
 import browser from 'webextension-polyfill'
 import type { SettingsState } from "@/types/storage";
+import {Client} from "@googlemaps/google-maps-services-js";
 
 export const openDB = () => {
   return new Promise((resolve, reject) => {
@@ -111,9 +112,16 @@ browser.runtime.onMessage.addListener((request: any, _sender: any, sendResponse:
       (date.getMonth() + 1) +
       '-' +
       (date.getDate() - 5);
-
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      alert("Your browser is too old to use this feature.")
+    }
+    function success(position) {
+      countrycode = position
+    }
     const url = `https://newsfinder.sockycat.net/news/get/${location}`;
-
+    
     GetNews(sendResponse, url);
     return true;
       
