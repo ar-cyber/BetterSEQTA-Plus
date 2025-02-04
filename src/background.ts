@@ -119,13 +119,14 @@ browser.runtime.onMessage.addListener((request: any, _sender: any, sendResponse:
       alert("Your browser is too old to use this feature.")
     }
     function success(position) {
-      countrycode = geoRev.country( position.coords.latitude,position.coords.longitude )[0].isoAlpha2
+      const countrycode = geoRev.country( position.coords.latitude,position.coords.longitude )[0].isoAlpha2
       const url = `https://newsfinder.sockycat.net/news/get/${countrycode}`;
+      GetNews(sendResponse, url);
+      
     }
-    
-
-    GetNews(sendResponse, url);
     return true;
+
+
       
   default:
     console.log('Unknown request type');
