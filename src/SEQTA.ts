@@ -2,7 +2,7 @@
 import Color from 'color'
 import Sortable from 'sortablejs'
 import browser from 'webextension-polyfill'
-import { animate, spring, stagger } from 'motion'
+import { animate, stagger } from 'motion'
 
 // Internal utilities and functions
 import { delay } from '@/seqta/utils/delay'
@@ -76,6 +76,10 @@ async function init() {
       if (settingsState.onoff) {
         enableCurrentTheme()
 
+        if (typeof settingsState.assessmentsAverage == 'undefined') {
+          settingsState.assessmentsAverage = true
+        }
+
         // TEMP FIX for bug! -> this is a hack to get the injected.css file to have HMR in development mode as this import system is currently broken with crxjs
         if (import.meta.env.MODE === 'development') {
           import('./css/injected.scss')
@@ -145,7 +149,7 @@ export function OpenWhatsNewPopup() {
 
   let video = document.createElement('video')
   let source = document.createElement('source')
-  // Perhaps we host this on a server and then grab it instead of having it locally? 
+
   source.setAttribute('src', 'https://raw.githubusercontent.com/BetterSEQTA/BetterSEQTA-Plus/main/src/resources/update-video.mp4')
   video.autoplay = true
   video.muted = true
@@ -159,7 +163,25 @@ export function OpenWhatsNewPopup() {
 
   let text = stringToHTML(
     /* html */ `
-  <div class="whatsnewTextContainer" style="height: 50%;overflow-y: scroll;">    
+  <div class="whatsnewTextContainer" style="height: 50%;overflow-y: scroll;">  
+  
+    <h1>3.4.3 - Minor Bug Fixes</h1>
+    <li>Fixed a bug where timetable colours couldn't be changed</li>
+    <li>Other minor bug fixes</li>
+
+    <h1>3.4.2 - Minor Bug Fixes</h1>
+    <li>Fixed a bug where Assessment Average wasn't enabled by default</li>
+    <li>Fixed floating menus would sometimes be placed behind other elements</li>
+
+    <h1>3.4.1 - Bug Fixes and Performance Improvements</h1>
+    <li>Added a new "Subject Average" section to the assessments page</li>
+    <li>Fixed a bug where animations wouldn't play correctly</li>
+    <li>Added loading animations to the home page</li>
+    <li>Under the hood performance improvements</li>
+    <li>Improved animation performance</li>
+    <li>Better Animations!</li>
+    <li>Minor style tweaks</li>
+  
     <h1>3.4.0 - Major Performance Update</h1>
     <li>Completely rebuilt the extension popup using Svelte for dramatically improved performance</li>
     <li>Added a brand new background store with search functionality and downloadable backgrounds</li>
@@ -304,6 +326,11 @@ export function OpenWhatsNewPopup() {
             <path fill="currentColor" d="M12,20L15.46,14H15.45C15.79,13.4 16,12.73 16,12C16,10.8 15.46,9.73 14.62,9H19.41C19.79,9.93 20,10.94 20,12A8,8 0 0,1 12,20M4,12C4,10.54 4.39,9.18 5.07,8L8.54,14H8.55C9.24,15.19 10.5,16 12,16C12.45,16 12.88,15.91 13.29,15.77L10.89,19.91C7,19.37 4,16.04 4,12M15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12M12,4C14.96,4 17.54,5.61 18.92,8H12C10.06,8 8.45,9.38 8.08,11.21L5.7,7.08C7.16,5.21 9.44,4 12,4M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
           </svg>
         </a>
+        <a class="socials" href="https://discord.gg/YzmbnCDkat" style="background: none !important; margin: 0 5px; padding: 0;">
+          <svg style="width: 25px; height: 25px;" viewBox="0 0 16 16">
+            <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" fill="white"/>
+          </svg>
+        </a>
       </div>
     </div>
   `).firstChild
@@ -328,17 +355,21 @@ export function OpenWhatsNewPopup() {
   if (settingsState.animations) {
     animate(
       [popup, bkelement as HTMLElement],
-      { scale: [0, 1], opacity: [0, 1] },
-      { easing: spring({ stiffness: 220, damping: 18 }) }
+      { scale: [0, 1] },
+      {
+        type: 'spring',
+        stiffness: 220,
+        damping: 18
+      }
     )
   
     animate(
       '.whatsnewTextContainer *',
       { opacity: [0, 1], y: [10, 0] },
       {
-        delay: stagger(0.05, { start: 0.1 }),
+        delay: stagger(0.05, { startDelay: 0.1 }),
         duration: 0.5,
-        easing: [.22, .03, .26, 1]  
+        ease: [.22, .03, .26, 1]  
       }
     )
   }
@@ -350,7 +381,7 @@ export function OpenWhatsNewPopup() {
     if (event.target === bkelement) {
       DeleteWhatsNew()
     }
-  });  
+  });
 
   var closeelement = document.getElementById('whatsnewclosebutton')
   closeelement!.addEventListener('click', function () {
@@ -402,6 +433,11 @@ export function OpenAboutPage() {
             <path fill="currentColor" d="M12,20L15.46,14H15.45C15.79,13.4 16,12.73 16,12C16,10.8 15.46,9.73 14.62,9H19.41C19.79,9.93 20,10.94 20,12A8,8 0 0,1 12,20M4,12C4,10.54 4.39,9.18 5.07,8L8.54,14H8.55C9.24,15.19 10.5,16 12,16C12.45,16 12.88,15.91 13.29,15.77L10.89,19.91C7,19.37 4,16.04 4,12M15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9A3,3 0 0,1 15,12M12,4C14.96,4 17.54,5.61 18.92,8H12C10.06,8 8.45,9.38 8.08,11.21L5.7,7.08C7.16,5.21 9.44,4 12,4M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2Z" />
           </svg>
         </a>
+        <a class="socials" href="https://discord.gg/YzmbnCDkat" style="background: none !important; margin: 0 5px; padding: 0;">
+          <svg style="width: 25px; height: 25px;" viewBox="0 0 16 16">
+            <path d="M13.545 2.907a13.2 13.2 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.2 12.2 0 0 0-3.658 0 8 8 0 0 0-.412-.833.05.05 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.04.04 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032q.003.022.021.037a13.3 13.3 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019q.463-.63.818-1.329a.05.05 0 0 0-.01-.059l-.018-.011a9 9 0 0 1-1.248-.595.05.05 0 0 1-.02-.066l.015-.019q.127-.095.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.05.05 0 0 1 .053.007q.121.1.248.195a.05.05 0 0 1-.004.085 8 8 0 0 1-1.249.594.05.05 0 0 0-.03.03.05.05 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.2 13.2 0 0 0 4.001-2.02.05.05 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.03.03 0 0 0-.02-.019m-8.198 7.307c-.789 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612m5.316 0c-.788 0-1.438-.724-1.438-1.612s.637-1.613 1.438-1.613c.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612" fill="white"/>
+          </svg>
+        </a>
       </div>
     </div>
   `).firstChild
@@ -424,17 +460,21 @@ export function OpenAboutPage() {
   if (settingsState.animations) {
     animate(
       [popup, bkelement as HTMLElement],
-      { scale: [0, 1], opacity: [0, 1] },
-      { easing: spring({ stiffness: 220, damping: 18 }) }
+      { scale: [0, 1] },
+      {
+        type: 'spring',
+        stiffness: 220,
+        damping: 18
+      }
     )
   
     animate(
       '.whatsnewTextContainer *',
       { opacity: [0, 1], y: [10, 0] },
       {
-        delay: stagger(0.05, { start: 0.1 }),
+        delay: stagger(0.05, { startDelay: 0.1 }),
         duration: 0.5,
-        easing: [.22, .03, .26, 1]  
+        ease: [.22, .03, .26, 1]  
       }
     )
   }
@@ -486,8 +526,8 @@ async function DeleteWhatsNew() {
   animate(
     [popup, bkelement!],
     { opacity: [1, 0], scale: [1, 0] },
-    { easing: [.22, .03, .26, 1] }
-  ).finished.then(() => {
+    { ease: [.22, .03, .26, 1] }
+  ).then(() => {
     bkelement?.remove()
   }); 
 }
@@ -666,7 +706,7 @@ function SortMessagePageItems(messagesParentElement: any) {
 async function LoadPageElements(): Promise<void> {
   await AddBetterSEQTAElements();
   const sublink: string | undefined = window.location.href.split('/')[4];
-
+  
   eventManager.register('messagesAdded', {
     elementType: 'div',
     className: 'messages',
@@ -697,7 +737,40 @@ async function LoadPageElements(): Promise<void> {
     className: 'timetablepage',
   }, handleTimetable);
 
+  eventManager.register('noticesAdded', {
+    elementType: 'div',
+    className: 'notice',
+  }, handleNotices);
+
+  if (settingsState.assessmentsAverage) {
+    eventManager.register('assessmentsAdded', {
+      elementType: 'div',
+      className: 'assessmentsWrapper',
+    }, handleAssessments);
+  }
+
   await handleSublink(sublink);
+}
+
+async function handleNotices(node: Element): Promise<void> {
+  if (!(node instanceof HTMLElement)) return;
+  if (!settingsState.animations) return;
+
+  node.style.opacity = '0';
+
+  // get index of node in relation to parent
+  const index = Array.from(node.parentElement!.children).indexOf(node);
+
+  animate(
+    node,
+    { opacity: [0, 1], y: [50, 0], scale: [0.99, 1] },
+    {
+      delay: 0.1 * index,
+      type: 'spring',
+      stiffness: 250,
+      damping: 20
+    }
+  );
 }
 
 async function handleSublink(sublink: string | undefined): Promise<void> {
@@ -721,27 +794,7 @@ async function handleSublink(sublink: string | undefined): Promise<void> {
       if (settingsState.onoff) loadHomePage()
       finishLoad();
       break;
-    case 'timetable':
-      handleTimetable()
-      await handleDefault()
-      break;
-    case 'documents':
-      handleDocuments(document.querySelector('.documents')!)
-      await handleDefault()
-      break;
-    case 'reports':
-      handleReports(document.querySelector('.reports')!)
-      await handleDefault()
-      break;
-    case 'messages':
-      handleMessages(document.querySelector('.messages')!)
-      await handleDefault()
-      break;
-    case 'dashboard':
-      handleDashboard(document.querySelector('.dashboard')!)
-      await handleDefault()
-      break;
-
+    
     default:
       await handleDefault()
       break;
@@ -800,9 +853,9 @@ async function handleMessages(node: Element): Promise<void> {
     messages,
     { opacity: [0, 1], y: [10, 0] },
     {
-      delay: stagger(0.05),
+      delay: stagger(0.03),
       duration: 0.5,
-      easing: [.22, .03, .26, 1]
+      ease: [.22, .03, .26, 1]
     }
   );
 
@@ -825,7 +878,7 @@ async function handleDashboard(node: Element): Promise<void> {
     {
       delay: stagger(0.1),
       duration: 0.5,
-      easing: [.22, .03, .26, 1]
+      ease: [.22, .03, .26, 1]
     }
   );
 
@@ -843,7 +896,7 @@ async function handleDocuments(node: Element): Promise<void> {
     {
       delay: stagger(0.05),
       duration: 0.5,
-      easing: [.22, .03, .26, 1]
+      ease: [.22, .03, .26, 1]
     }
   );
 }
@@ -857,9 +910,9 @@ async function handleReports(node: Element): Promise<void> {
     '.reports .item',
     { opacity: [0, 1], y: [10, 0] },
     {
-      delay: stagger(0.05, { start: 0.2 }),
+      delay: stagger(0.05, { startDelay: 0.2 }),
       duration: 0.5,
-      easing: [.22, .03, .26, 1]
+      ease: [.22, .03, .26, 1]
     }
   );
 }
@@ -1052,10 +1105,15 @@ export const closeExtensionPopup = (extensionPopup?: HTMLElement) => {
 
   extensionPopup.classList.add('hide')
   if (settingsState.animations) {
-    animate((progress) => {
-      extensionPopup.style.opacity = Math.max(0, 1 - progress).toString()
-      extensionPopup.style.transform = `scale(${Math.max(0, 1 - progress)})`
-    }, { easing: spring({ stiffness: 520, damping: 20 }) })
+    animate(1, 0, {
+      onUpdate: (progress) => {
+        extensionPopup.style.opacity = Math.max(0, progress).toString()
+        extensionPopup.style.transform = `scale(${Math.max(0, progress)})`
+      },
+      type: 'spring',
+      stiffness: 520,
+      damping: 20
+    });
   } else {
     extensionPopup.style.opacity = '0'
     extensionPopup.style.transform = 'scale(0)'
@@ -1329,10 +1387,15 @@ export function setupSettingsButton() {
       closeExtensionPopup(extensionPopup as HTMLElement);
     } else {
       if (settingsState.animations) {
-        animate((progress) => {
-          extensionPopup!.style.opacity = progress.toString()
-          extensionPopup!.style.transform = `scale(${progress})`
-        }, { easing: spring({ stiffness: 280, damping: 20 }) });
+        animate(0, 1, {
+          onUpdate: (progress) => {
+            extensionPopup!.style.opacity = progress.toString()
+            extensionPopup!.style.transform = `scale(${progress})`
+          },
+          type: 'spring',
+          stiffness: 280,
+          damping: 20
+        });
 
       } else {
         extensionPopup!.style.opacity = '1'
@@ -1729,8 +1792,8 @@ function createAssessmentDateDiv(date: string, value: any, datecase?: any) {
 
     let titlesvg =
       stringToHTML(`<svg viewBox="0 0 24 24" style="width:35px;height:35px;fill:white;">
-    <path d="M6 20H13V22H6C4.89 22 4 21.11 4 20V4C4 2.9 4.89 2 6 2H18C19.11 2 20 2.9 20 4V12.54L18.5 11.72L18 12V4H13V12L10.5 9.75L8 12V4H6V20M24 17L18.5 14L13 17L18.5 20L24 17M15 19.09V21.09L18.5 23L22 21.09V19.09L18.5 21L15 19.09Z"></path>
-    </svg>`).firstChild
+  <path d="M6 20H13V22H6C4.89 22 4 21.11 4 20V4C4 2.9 4.89 2 6 2H18C19.11 2 20 2.9 20 4V12.54L18.5 11.72L18 12V4H13V12L10.5 9.75L8 12V4H6V20M24 17L18.5 14L13 17L18.5 20L24 17M15 19.09V21.09L18.5 23L22 21.09V19.09L18.5 21L15 19.09Z"></path>
+  </svg>`).firstChild
     titlediv.append(titlesvg!)
 
     let detailsdiv = document.createElement('div')
@@ -2109,314 +2172,295 @@ async function AddCustomShortcutsToPage() {
 }
 
 export async function loadHomePage() {
-  // Sends the html data for the home page
   console.info('[BetterSEQTA+] Started Loading Home Page')
+  
+  // Wait for the DOM to finish clearing
+  await delay(10)
 
   document.title = 'Home ― SEQTA Learn'
   const element = document.querySelector('[data-key=home]')
-
-  await delay(8)
-
-  // Apply the active class to indicate clicked on home button
-  element!.classList.add('active')
-
-  // Remove all current elements in the main div to add new elements
-  const main = document.getElementById('main')
+  element?.classList.add('active')
   
+  // Cache DOM queries
+  const main = document.getElementById('main')
   if (!main) {
-    console.error('Main element not found.')
+    console.error('[BetterSEQTA+] Main element not found.')
     return
-  } else {
-    main!.innerHTML = ''
   }
 
-  currentSelectedDate = new Date()
-
-  // Creates the root of the home page added to the main div
-  let homeContainer = stringToHTML(/* html */`
-    <div class="home-root">
-      <div class="home-container" id="home-container"></div>
-    </div>`)
+  // Create root container first
+  const homeRoot = stringToHTML(/* html */`<div id="home-root" class="home-root"></div>`)
   
-  // Appends the html file to main div
-  // Note: firstChild of html is done due to needing to grab the body from the stringToHTML function
-  main.append(homeContainer?.firstChild!)
+  // Clear main and add home root
+  main.innerHTML = ''
+  main.appendChild(homeRoot?.firstChild!)
 
-  // Gets the current date
-  const date = new Date()
+  // Get reference to home container for all subsequent additions
+  const homeContainer = document.getElementById('home-root')
+  if (!homeContainer) return
 
-  // Creates the shortcut container into the home container
-  const Shortcut = stringToHTML(/* html */`
-    <div class="shortcut-container border">
-      <div class="shortcuts border" id="shortcuts"></div>
-    </div>`)
-
-  // Appends the shortcut container into the home container
-  document.getElementById('home-container')?.append(Shortcut?.firstChild!)
-  
-  // Creates the container div for the timetable portion of the home page
-  const Timetable = stringToHTML(/* html */`
-    <div class="timetable-container border" ${settingsState.animations ? `style="opacity: 0;"` : ''}>
-      <div class="home-subtitle">
-        <h2 id="home-lesson-subtitle">Today\'s Lessons</h2>
-        <div class="timetable-arrows">
-          <svg width="24" height="24" viewBox="0 0 24 24" style="transform: scale(-1,1)" id="home-timetable-back"><g style="fill: currentcolor;"><path d="M8.578 16.359l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z"></path></g></svg>
-          <svg width="24" height="24" viewBox="0 0 24 24" id="home-timetable-forward"><g style="fill: currentcolor;"><path d="M8.578 16.359l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z"></path></g></svg>
+  const skeletonStructure = stringToHTML(/* html */`
+    <div class="home-container" id="home-container">
+      <div class="border shortcut-container">
+        <div class="border shortcuts" id="shortcuts"></div>
+      </div>
+      <div class="border timetable-container">
+        <div class="home-subtitle">
+          <h2 id="home-lesson-subtitle">Today's Lessons</h2>
+          <div class="timetable-arrows">
+            <svg width="24" height="24" viewBox="0 0 24 24" style="transform: scale(-1,1)" id="home-timetable-back">
+              <g style="fill: currentcolor;"><path d="M8.578 16.359l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z"></path></g>
+            </svg>
+            <svg width="24" height="24" viewBox="0 0 24 24" id="home-timetable-forward">
+              <g style="fill: currentcolor;"><path d="M8.578 16.359l4.594-4.594-4.594-4.594 1.406-1.406 6 6-6 6z"></path></g>
+            </svg>
+          </div>
+        </div>
+        <div class="day-container loading" id="day-container">
         </div>
       </div>
-      <div class="day-container" id="day-container"></div>
-    </div>`)
-  
-  // Appends the timetable container into the home container
-  document.getElementById('home-container')?.append(Timetable?.firstChild!)
-
-  // Formats the current date used send a request for timetable and notices later
-  const TodayFormatted =
-    date.getFullYear() + '-' + ((date.getMonth() + 1) < 10 ? '0' : '') + (date.getMonth() + 1) + '-' + (date.getDate() < 10 ? '0' : '') + date.getDate()
-
-  callHomeTimetable(TodayFormatted, true)
-
-
-  const timetablearrowback = document.getElementById('home-timetable-back')
-  const timetablearrowforward = document.getElementById('home-timetable-forward')
-
-  function SetTimetableSubtitle() {
-    var homelessonsubtitle = document.getElementById('home-lesson-subtitle')
-    const date = new Date()
-    if (
-      date.getFullYear() == currentSelectedDate.getFullYear() &&
-      date.getMonth() == currentSelectedDate.getMonth()
-    ) {
-      if (date.getDate() == currentSelectedDate.getDate()) {
-        // Change text to Today's Lessons
-        homelessonsubtitle!.innerText = 'Today\'s Lessons'
-      } else if (date.getDate() - 1 == currentSelectedDate.getDate()) {
-        // Change text to Yesterday's Lessons
-        homelessonsubtitle!.innerText = 'Yesterday\'s Lessons'
-      } else if (date.getDate() + 1 == currentSelectedDate.getDate()) {
-        // Change text to Tomorrow's Lessons
-        homelessonsubtitle!.innerText = 'Tomorrow\'s Lessons'
-      } else {
-        // Change text to date of the day
-        homelessonsubtitle!.innerText = `${currentSelectedDate.toLocaleString(
-          'en-us',
-          { weekday: 'short' },
-        )} ${currentSelectedDate.toLocaleDateString('en-au')}`
-      }
-    } else {
-      // Change text to date of the day
-      homelessonsubtitle!.innerText = `${currentSelectedDate.toLocaleString(
-        'en-us',
-        { weekday: 'short' },
-      )} ${currentSelectedDate.toLocaleDateString('en-au')}`
-    }
-  }
-
-  function changeTimetable(value: any) {
-    currentSelectedDate.setDate(currentSelectedDate.getDate() + value)
-    let FormattedDate =
-      currentSelectedDate.getFullYear() +
-      '-' +
-      (currentSelectedDate.getMonth() + 1) +
-      '-' +
-      currentSelectedDate.getDate()
-    callHomeTimetable(FormattedDate, true)
-    SetTimetableSubtitle()
-  }
-
-  timetablearrowback!.addEventListener('click', function () {
-    changeTimetable(-1)
-  })
-  timetablearrowforward!.addEventListener('click', function () {
-    changeTimetable(1)
-  })
-
-  addShortcuts(settingsState.shortcuts)
-  AddCustomShortcutsToPage()
-
-  // Creates the upcoming container and appends to the home container
-  const upcomingcontainer = document.createElement('div')
-  upcomingcontainer.classList.add('upcoming-container')
-  upcomingcontainer.classList.add('border')
-
-  const upcomingtitlediv = CreateElement('div', 'upcoming-title')
-  const upcomingtitle = document.createElement('h2')
-  upcomingtitle.classList.add('home-subtitle')
-  upcomingtitle.innerText = 'Upcoming Assessments'
-  upcomingtitlediv.append(upcomingtitle)
-
-  let upcomingfilterdiv = CreateElement(
-    'div',
-    'upcoming-filters',
-    'upcoming-filters',
-  )
-  upcomingtitlediv.append(upcomingfilterdiv)
-
-  upcomingcontainer.append(upcomingtitlediv)
-
-  const upcomingitems = document.createElement('div')
-  upcomingitems.id = 'upcoming-items'
-  upcomingitems.classList.add('upcoming-items')
-
-  upcomingcontainer.append(upcomingitems)
-
-  document.getElementById('home-container')!.append(upcomingcontainer)
-
-  // Creates the notices container into the home container
-  const NoticesStr = /* html */ `
-    <div class="notices-container border" ${settingsState.animations ? `style="opacity: 0;"` : ''}>
-      <div style="display: flex; justify-content: space-between">
-        <h2 class="home-subtitle">Notices</h2>
-        <input type="date" value=${TodayFormatted} />
+      <div class="border upcoming-container">
+        <div class="upcoming-title">
+          <h2 class="home-subtitle">Upcoming Assessments</h2>
+          <div class="upcoming-filters" id="upcoming-filters"></div>
+        </div>
+        <div class="upcoming-items loading" id="upcoming-items">
+        </div>
       </div>
-      <div class="notice-container" id="notice-container"></div>
-    </div>`
-    
-  var Notices = stringToHTML(NoticesStr)
-  // Appends the shortcut container into the home container
-  document.getElementById('home-container')!.append(Notices.firstChild!) // HERE!!!
+      <div class="border notices-container">
+        <div style="display: flex; justify-content: space-between">
+          <h2 class="home-subtitle">Notices</h2>
+          <input type="date" />
+        </div>
+        <div class="notice-container upcoming-items loading" id="notice-container">
+        </div>
+      </div>
+    </div>`)
 
+  // Add skeleton structure
+  homeContainer.appendChild(skeletonStructure.firstChild!)
+
+  // Run animations if enabled
   if (settingsState.animations) {
     animate(
       '.home-container > div',
-      { opacity: [0, 1], y: [10, 0] },
+      { opacity: [0, 1], y: [10, 0], scale: [0.99, 1] },
       {
-        delay: stagger(0.2, { start: 0 }),
-        duration: 0.6,
-        easing: [.22, .03, .26, 1]  
+        delay: stagger(0.15, { startDelay: 0.1 }),
+        type: 'spring',
+        stiffness: 341,
+        damping: 20,
+        mass: 1
       }
     )
   }
 
-  callHomeTimetable(TodayFormatted)
+  // Setup event listeners with cleanup
+  const cleanup = setupTimetableListeners()
 
-  const GetPrefs = await fetch(`${location.origin}/seqta/student/load/prefs?`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ asArray: true, request: 'userPrefs' })
-  })
+  // Initialize shortcuts immediately
+  addShortcuts(settingsState.shortcuts)
+  AddCustomShortcutsToPage()
 
-  const response = await GetPrefs.json()
+  // Get current date
+  const date = new Date()
+  const TodayFormatted = formatDate(date)
 
-  const labelArray = response.payload.filter((item: any) => item.name === 'notices.filters').map((item: any) => item.value)
+  // Start all data fetching in parallel
+  const [
+    timetablePromise,
+    assessmentsPromise,
+    classesPromise,
+    prefsPromise,
+  ] = [
+    // Timetable data
+    fetch(`${location.origin}/seqta/student/load/timetable?`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from: TodayFormatted,
+        until: TodayFormatted,
+        student: 69,
+      })
+    }).then(res => res.json()),
 
-  if (labelArray.length !== 0) {
-    const labelArray = response.payload.filter((item: any) => item.name === 'notices.filters').map((item: any) => item.value)[0].split(' ')
-    const xhr2 = new XMLHttpRequest()
-    xhr2.open(
-      'POST',
-      `${location.origin}/seqta/student/load/notices?`,
-      true
-    )
-    xhr2.setRequestHeader('Content-Type', 'application/json; charset=utf-8')
+    // Assessments data
+    GetUpcomingAssessments(),
+
+    // Classes data  
+    GetActiveClasses(),
+
+    // Preferences data
+    fetch(`${location.origin}/seqta/student/load/prefs?`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ asArray: true, request: 'userPrefs' })
+    }).then(res => res.json())
+  ]
+
+  // Process all data in parallel
+  const [timetableData, assessments, classes, prefs] = await Promise.all([
+    timetablePromise,
+    assessmentsPromise, 
+    classesPromise,
+    prefsPromise
+  ])
+
+  // Process timetable data
+  const dayContainer = document.getElementById('day-container')
+  if (dayContainer && timetableData.payload.items.length > 0) {
+    const lessonArray = timetableData.payload.items.sort((a: any, b: any) => a.from.localeCompare(b.from))
+    const colours = await GetLessonColours()
     
-    xhr2.onreadystatechange = function () {
-      if (xhr2.readyState === 4) {
-        processNotices(xhr2.response, labelArray);
+    // Process and display lessons
+    dayContainer.innerHTML = ''
+    for (let i = 0; i < lessonArray.length; i++) {
+      const lesson = lessonArray[i]
+      const subjectname = `timetable.subject.colour.${lesson.code}`
+      const subject = colours.find((element: any) => element.name === subjectname)
+      
+      lesson.colour = subject ? `--item-colour: ${subject.value};` : '--item-colour: #8e8e8e;'
+      lesson.from = lesson.from.substring(0, 5)
+      lesson.until = lesson.until.substring(0, 5)
+
+      if (settingsState.timeFormat === '12') {
+        lesson.from = convertTo12HourFormat(lesson.from)
+        lesson.until = convertTo12HourFormat(lesson.until)
       }
-    };
-    
-    const dateControl = document.querySelector('input[type="date"]') as HTMLInputElement;
-    xhr2.send(JSON.stringify({ date: dateControl.value }));
-  
-    function onInputChange(e: any) {
-      xhr2.open('POST', `${location.origin}/seqta/student/load/notices?`, true);
-      xhr2.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
-      xhr2.send(JSON.stringify({ date: e.target.value }));
-    
-      xhr2.onreadystatechange = function () {
-        if (xhr2.readyState === 4) {
-          processNotices(xhr2.response, labelArray);
+
+      lesson.attendanceTitle = CheckUnmarkedAttendance(lesson.attendance)
+      
+      const div = makeLessonDiv(lesson, i + 1)
+      if (GetThresholdOfColor(subject?.value) > 300) {
+        const firstChild = div.firstChild as HTMLElement
+        if (firstChild) {
+          firstChild.classList.add('day-inverted')
         }
-      };
+      }
+      dayContainer.appendChild(div.firstChild!)
     }
-    
-    dateControl.addEventListener('input', onInputChange);
+
+    // Check current lessons
+    if (currentSelectedDate.getDate() === date.getDate()) {
+      for (let i = 0; i < lessonArray.length; i++) {
+        CheckCurrentLesson(lessonArray[i], i + 1)
+      }
+      CheckCurrentLessonAll(lessonArray)
+    }
+  } else if (dayContainer) {
+    dayContainer.innerHTML = /* html */`
+      <div class="day-empty">
+        <img src="${browser.runtime.getURL(LogoLight)}" />
+        <p>No lessons available.</p>
+      </div>`
   }
-    
+  dayContainer?.classList.remove('loading')
+
+  // Process assessments data
+  const activeClass = classes.find((c: any) => c.hasOwnProperty("active"))
+  const activeSubjects = activeClass?.subjects || []
+  const activeSubjectCodes = activeSubjects.map((s: any) => s.code)
+  const currentAssessments = assessments
+    .filter((a: any) => activeSubjectCodes.includes(a.code))
+    .sort(comparedate)
+
+  const upcomingItems = document.getElementById('upcoming-items')
+  if (upcomingItems) {
+    await CreateUpcomingSection(currentAssessments, activeSubjects)
+    upcomingItems.classList.remove('loading')
+  }
+
+  // Process notices data
+  const labelArray = prefs.payload
+    .filter((item: any) => item.name === 'notices.filters')
+    .map((item: any) => item.value)
+
+  if (labelArray.length > 0) {
+    const noticeContainer = document.getElementById('notice-container')
+    if (noticeContainer) {
+      const dateControl = document.querySelector('input[type="date"]') as HTMLInputElement
+      if (dateControl) {
+        dateControl.value = TodayFormatted
+        setupNotices(labelArray[0].split(' '), TodayFormatted)
+      }
+      noticeContainer.classList.remove('loading')
+    }
+  }
+
   if (settingsState.notificationcollector) {
     enableNotificationCollector()
   }
-  
-  const assessments = await GetUpcomingAssessments()
-  const classes = await GetActiveClasses()
 
-  let activeClass;
-  
-  // Gets all subjects for the student
-  for (let i = 0; i < classes.length; i++) {
-    const element = classes[i];
-    
-    if (element.hasOwnProperty("active")) {
-      // Finds the active class list with the current subjects
-      activeClass = classes[i]
-    }
-  }
-  
-  let activeSubjects = []
-  if (activeClass?.subjects) {
-    activeSubjects = activeClass.subjects
-  }
-
-  let activeSubjectCodes = []
-  
-  // Gets the code for each of the subjects and puts them in an array
-  for (let i = 0; i < activeSubjects.length; i++) {
-    activeSubjectCodes.push(activeSubjects[i].code)
-  }
-
-  let CurrentAssessments = []
-  for (let i = 0; i < assessments.length; i++) {
-    if (activeSubjectCodes.includes(assessments[i].code)) {
-      CurrentAssessments.push(assessments[i])
-    }
-  }
-
-  CurrentAssessments.sort(comparedate)
-
-  await CreateUpcomingSection(CurrentAssessments, activeSubjects)
+  return cleanup
 }
 
-function processNotices(responseText: any, labelArray: any) {
-  const NoticesPayload = JSON.parse(responseText);
-  const NoticeContainer = document.getElementById('notice-container');
-  if (NoticesPayload.payload.length === 0) {
-    if (!NoticeContainer?.innerText) {
-      const dummyNotice = document.createElement('div');
-      dummyNotice.textContent = 'No notices for today.';
-      dummyNotice.classList.add('dummynotice');
-      NoticeContainer?.append(dummyNotice);
-    }
-  } else {
-    if (!NoticeContainer?.innerText) {
-      document.querySelectorAll('.notice').forEach(e => e.remove());
+// Helper functions
+function formatDate(date: Date): string {
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 
-      NoticesPayload.payload.forEach((notice: any) => {
-        if (labelArray.includes(JSON.stringify(notice.label))) {
-          let htmlContent = `
-            <div class="notice" style="--colour: ${notice.colour}">
-              <h3 style="color:var(--colour)">${notice.title}</h3>
-              ${notice.label_title !== undefined ? `<h5 style="color:var(--colour)">${notice.label_title}</h5>` : ''}
-              <h6 style="color:var(--colour)">${notice.staff}</h6>
-              ${notice.contents.replace(/\[\[[\w]+[:][\w]+[\]\]]+/g, '').replace(/ +/, ' ')}
-              <div class="colourbar" style="background: var(--colour)"></div>
-            </div>
-          `;
-          const NewNotice = stringToHTML(htmlContent).firstChild;
+function setupTimetableListeners() {
+  const listeners: Array<() => void> = []
+  const timetableBack = document.getElementById('home-timetable-back')
+  const timetableForward = document.getElementById('home-timetable-forward')
 
-          let colour = notice.colour;
-          if (typeof colour === 'string') {
-            const rgb = GetThresholdOfColor(colour);
-            if (rgb < 100 && settingsState.DarkMode) {
-              colour = undefined;
-            }
-          }
-          (NewNotice as HTMLElement).style.cssText = `--colour: ${colour}`;
+  function changeTimetable(value: number) {
+    currentSelectedDate.setDate(currentSelectedDate.getDate() + value)
+    const formattedDate = formatDate(currentSelectedDate)
+    callHomeTimetable(formattedDate, true)
+    SetTimetableSubtitle()
+  }
 
-          NoticeContainer!.append(NewNotice!);
-        }
-      });
-    }
+  const backHandler = () => changeTimetable(-1)
+  const forwardHandler = () => changeTimetable(1)
+
+  timetableBack?.addEventListener('click', backHandler)
+  timetableForward?.addEventListener('click', forwardHandler)
+
+  listeners.push(
+    () => timetableBack?.removeEventListener('click', backHandler),
+    () => timetableForward?.removeEventListener('click', forwardHandler)
+  )
+
+  return () => listeners.forEach(cleanup => cleanup())
+}
+
+function setupNotices(labelArray: string[], date: string) {
+  const dateControl = document.querySelector('input[type="date"]') as HTMLInputElement
+  
+  const fetchNotices = async (date: string) => {
+    const response = await fetch(`${location.origin}/seqta/student/load/notices?`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json; charset=utf-8' },
+      body: JSON.stringify({ date })
+    })
+    const data = await response.json()
+    processNotices(data, labelArray)
+  }
+
+  // Debounce the input handler
+  const debouncedInputChange = debounce((e: Event) => {
+    const target = e.target as HTMLInputElement
+    fetchNotices(target.value)
+  }, 250)
+
+  dateControl?.addEventListener('input', debouncedInputChange)
+  fetchNotices(date)
+
+  return () => dateControl?.removeEventListener('input', debouncedInputChange)
+}
+
+function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  wait: number
+): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
   }
 }
 
@@ -2503,72 +2547,86 @@ function createNewShortcut(link: any, icon: any, viewBox: any, title: any) {
   document.getElementById('shortcuts')!.appendChild(shortcut)
 }
 
-export function SendNewsPage() {
-  setTimeout(function () {
-    // Sends the html data for the home page
-    console.info('[BetterSEQTA+] Started Loading News Page')
-    document.title = 'News ― SEQTA Learn'
-    var element = document.querySelector('[data-key=news]')
+export async function SendNewsPage() {
+  console.info('[BetterSEQTA+] Started Loading News Page')
+  document.title = 'News ― SEQTA Learn'
+  await delay(100)
 
-    // Apply the active class to indicate clicked on home button
-    element!.classList.add('active')
+  const element = document.querySelector('[data-key=news]')
+  element!.classList.add('active')
 
-    // Remove all current elements in the main div to add new elements
-    var main = document.getElementById('main')
-    main!.innerHTML = ''
+  // Remove all current elements in the main div to add new elements
+  const main = document.getElementById('main')
+  main!.innerHTML = ''
 
-    // Creates the root of the home page added to the main div
-    var htmlStr = '<div class="home-root"><div class="home-container" id="news-container"><h1 class="border">Latest Headlines - ABC News</h1></div></div>'
+  const html = stringToHTML(/* html */`
+    <div class="home-root">
+      <div class="home-container" id="news-container">
+        <h1 class="border">Latest Headlines - ABC News</h1>
+      </div>
+    </div>`)
 
-    var html = stringToHTML(htmlStr)
-    // Appends the html file to main div
-    // Note : firstChild of html is done due to needing to grab the body from the stringToHTML function
-    main!.append(html.firstChild!)
+  main!.append(html.firstChild!)
 
-    const titlediv = document.getElementById('title')!.firstChild;
-    (titlediv! as HTMLElement).innerText = 'News'
-    AppendLoadingSymbol('newsloading', '#news-container')
+  const titlediv = document.getElementById('title')!.firstChild;
+  (titlediv! as HTMLElement).innerText = 'News'
+  AppendLoadingSymbol('newsloading', '#news-container')
 
-    browser.runtime.sendMessage({ type: 'sendNews' }).then(function (response) {
-      let newsarticles = response.news.articles
-      var newscontainer = document.querySelector('#news-container')
-      document.getElementById('newsloading')?.remove()
-      for (let i = 0; i < newsarticles.length; i++) {
-        let newsarticle = document.createElement('a')
-        newsarticle.classList.add('NewsArticle')
-        newsarticle.href = newsarticles[i].url
-        newsarticle.target = '_blank'
+  const response = await browser.runtime.sendMessage({ type: 'sendNews' })
+  const newscontainer = document.querySelector('#news-container')
+  document.getElementById('newsloading')?.remove()
 
-        let articleimage = document.createElement('div')
-        articleimage.classList.add('articleimage')
+  // Create a document fragment to batch DOM operations
+  const fragment = document.createDocumentFragment()
 
-        if (newsarticles[i].urlToImage == 'null') {
-          articleimage.style.backgroundImage = `url(${browser.runtime.getURL(LogoLightOutline)})`
-          articleimage.style.width = '20%'
-          articleimage.style.margin = '0 7.5%'
-        } else {
-          articleimage.style.backgroundImage = `url(${newsarticles[i].urlToImage})`
-        }
+  // Map over articles to create elements
+  response.news.articles.forEach((article: any) => {
+    const newsarticle = document.createElement('a')
+    newsarticle.classList.add('NewsArticle')
+    newsarticle.href = article.url
+    newsarticle.target = '_blank'
 
-        let articletext = document.createElement('div')
-        articletext.classList.add('ArticleText')
-        let title = document.createElement('a')
-        title.innerText = newsarticles[i].title
-        title.href = newsarticles[i].url
-        title.target = '_blank'
+    const articleimage = document.createElement('div')
+    articleimage.classList.add('articleimage')
 
-        let description = document.createElement('p')
-        description.innerHTML = newsarticles[i].description
+    if (article.urlToImage == 'null') {
+      articleimage.style.cssText = `
+        background-image: url(${browser.runtime.getURL(LogoLightOutline)});
+        width: 20%;
+        margin: 0 7.5%;
+      `
+    } else {
+      articleimage.style.backgroundImage = `url(${article.urlToImage})`
+    }
 
-        articletext.append(title)
-        articletext.append(description)
+    const articletext = document.createElement('div')
+    articletext.classList.add('ArticleText')
+    
+    const title = document.createElement('a')
+    title.innerText = article.title
+    title.href = article.url
+    title.target = '_blank'
 
-        newsarticle.append(articleimage)
-        newsarticle.append(articletext)
-        newscontainer?.append(newsarticle)
-      }
-    })
-  }, 8)
+    const description = document.createElement('p')
+    description.innerHTML = article.description
+
+    articletext.append(title, description)
+    newsarticle.append(articleimage, articletext)
+    fragment.append(newsarticle)
+  })
+
+  // Single DOM update to append all articles
+  newscontainer?.append(fragment)
+  
+  if (!settingsState.animations) return;
+
+  const articles = Array.from(document.querySelectorAll('.NewsArticle'))
+
+  animate(
+    articles.slice(0, 20),
+    { opacity: [0, 1], y: [10, 0], scale: [0.99, 1] },
+    { delay: stagger(0.1), type: 'spring', stiffness: 341, damping: 20, mass: 1 }
+  )
 }
 
 async function CheckForMenuList() {
@@ -2579,4 +2637,158 @@ async function CheckForMenuList() {
   } catch (error) {
     return;
   }
+}
+
+function SetTimetableSubtitle() {
+  const homelessonsubtitle = document.getElementById('home-lesson-subtitle')
+  if (!homelessonsubtitle) return
+
+  const date = new Date()
+  const isSameMonth = date.getFullYear() === currentSelectedDate.getFullYear() && 
+                      date.getMonth() === currentSelectedDate.getMonth()
+  
+  if (isSameMonth) {
+    const dayDiff = date.getDate() - currentSelectedDate.getDate()
+    switch(dayDiff) {
+      case 0:
+        homelessonsubtitle.innerText = 'Today\'s Lessons'
+        break
+      case 1:
+        homelessonsubtitle.innerText = 'Yesterday\'s Lessons'
+        break
+      case -1:
+        homelessonsubtitle.innerText = 'Tomorrow\'s Lessons'
+        break
+      default:
+        homelessonsubtitle.innerText = formatDateString(currentSelectedDate)
+    }
+  } else {
+    homelessonsubtitle.innerText = formatDateString(currentSelectedDate)
+  }
+}
+
+function formatDateString(date: Date): string {
+  return `${date.toLocaleString('en-us', { weekday: 'short' })} ${date.toLocaleDateString('en-au')}`
+}
+
+function processNotices(response: any, labelArray: string[]) {
+  const NoticeContainer = document.getElementById('notice-container')
+  if (!NoticeContainer) return
+
+  // Clear existing notices
+  NoticeContainer.innerHTML = ''
+
+  const notices = response.payload
+  if (!notices.length) {
+    const dummyNotice = document.createElement('div')
+    dummyNotice.textContent = 'No notices for today.'
+    dummyNotice.classList.add('dummynotice')
+    NoticeContainer.append(dummyNotice)
+    return
+  }
+
+  // Create document fragment for batch DOM updates
+  const fragment = document.createDocumentFragment()
+
+  // Process notices in batch
+  notices.forEach((notice: any) => {
+    if (labelArray.includes(JSON.stringify(notice.label))) {
+      const colour = processNoticeColor(notice.colour)
+      const noticeElement = createNoticeElement(notice, colour)
+      fragment.appendChild(noticeElement)
+    }
+  })
+
+  // Single DOM update
+  NoticeContainer.appendChild(fragment)
+}
+
+function processNoticeColor(colour: string): string | undefined {
+  if (typeof colour === 'string') {
+    const rgb = GetThresholdOfColor(colour)
+    if (rgb < 100 && settingsState.DarkMode) {
+      return undefined
+    }
+  }
+  return colour
+}
+
+function createNoticeElement(notice: any, colour: string | undefined): Node {
+  const htmlContent = `
+    <div class="notice" style="--colour: ${colour}">
+      <h3 style="color:var(--colour)">${notice.title}</h3>
+      ${notice.label_title !== undefined ? `<h5 style="color:var(--colour)">${notice.label_title}</h5>` : ''}
+      <h6 style="color:var(--colour)">${notice.staff}</h6>
+      ${notice.contents.replace(/\[\[[\w]+[:][\w]+[\]\]]+/g, '').replace(/ +/, ' ')}
+      <div class="colourbar" style="background: var(--colour)"></div>
+    </div>`
+  
+  const element = stringToHTML(htmlContent).firstChild
+  if (element instanceof HTMLElement) {
+    element.style.setProperty('--colour', colour ?? '')
+  }
+  return element!
+}
+
+async function handleAssessments(node: Element): Promise<void> {
+  if (!(node instanceof HTMLElement)) return;
+
+  // Wait for the assessments wrapper to be mounted
+  const assessmentsWrapper = await waitForElm('#main > .assessmentsWrapper .assessments .AssessmentItem__AssessmentItem___2EZ95', true, 50);
+  if (!assessmentsWrapper) return;
+
+  // Function to calculate average of grades
+  function calculateAverageGrade(): number {
+    const gradeElements = document.querySelectorAll('.Thermoscore__text___1NdvB');
+    let total = 0;
+    let count = 0;
+
+    gradeElements.forEach(element => {
+      const grade = parseFloat(element.textContent?.replace('%', '') || '0');
+      if (!isNaN(grade)) {
+        total += grade;
+        count++;
+      }
+    });
+
+    return count > 0 ? total / count : 0;
+  }
+
+  // Function to add the average assessment item
+  function addAverageAssessment() {
+    const average = calculateAverageGrade();
+    if (average === 0) return;
+
+    // Remove existing average section if it exists
+    const existingAverage = document.querySelector('.AssessmentItem__AssessmentItem___2EZ95:first-child');
+    if (existingAverage?.querySelector('.AssessmentItem__title___2bELn')?.textContent === 'Subject Average') {
+      existingAverage.remove();
+    }
+
+    const averageElement = stringToHTML(/* html */`
+      <div class="AssessmentItem__AssessmentItem___2EZ95">
+        <div class="AssessmentItem__metaContainer___dMKma">
+          <div class="AssessmentItem__meta___WNSiK">
+            <div class="AssessmentItem__simpleResult___iBCeC">
+              <div class="AssessmentItem__title___2bELn">Subject Average</div>
+            </div>
+          </div>
+        </div>
+        <div class="Thermoscore__Thermoscore___2tWMi">
+          <div class="Thermoscore__fill___35WjF" style="width: ${average.toFixed(2)}%;">
+            <div class="Thermoscore__text___1NdvB" title="${average.toFixed(2)}%">${average.toFixed(2)}%</div>
+          </div>
+        </div>
+      </div>
+    `);
+
+    // Insert at the beginning of the assessments list
+    const assessmentsList = document.querySelector('.assessments .AssessmentList__items___3LcmQ');
+    if (assessmentsList && averageElement.firstChild) {
+      assessmentsList.insertBefore(averageElement.firstChild, assessmentsList.firstChild);
+    }
+  }
+
+  // Add the average assessment item
+  addAverageAssessment();
 }

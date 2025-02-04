@@ -54,6 +54,16 @@ export default defineConfig({
       port: 5173
     }
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern'
+      }
+    }
+  },
+  optimizeDeps: {
+    include: ['@babel/runtime/helpers/extends', '@babel/runtime/helpers/interopRequireDefault'],
+  },
   build: {
     outDir: resolve(__dirname, 'dist', mode),
     emptyOutDir: false,
