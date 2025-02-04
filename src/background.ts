@@ -107,20 +107,21 @@ browser.runtime.onMessage.addListener((request: any, _sender: any, sendResponse:
   case 'sendNews':
     const date = new Date();
 
-    const from =
-      date.getFullYear() +
-      '-' +
-      (date.getMonth() + 1) +
-      '-' +
-      (date.getDate() - 5);
+
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(success, error);
     } else {
       alert("Your browser is too old to use this feature.")
     }
     function success(position) {
+      const from =
+        date.getFullYear() +
+      '-' +
+        (date.getMonth() + 1) +
+      '-' +
+        (date.getDate() - 5);
       const countrycode = geoRev.country( position.coords.latitude,position.coords.longitude )[0].isoAlpha2
-      const url = `https://newsfinder.sockycat.net/news/get/${countrycode}`;
+      const url = `https://newsfinder.sockycat.net/news/get/${countrycode}/${from}`;
       GetNews(sendResponse, url);
       
     }
