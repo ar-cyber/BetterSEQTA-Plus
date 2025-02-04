@@ -2,6 +2,9 @@ import browser from 'webextension-polyfill'
 import type { SettingsState } from "@/types/storage";
 import {Client} from "@googlemaps/google-maps-services-js";
 
+const client = new Client({}); // Not tested yet
+
+
 export const openDB = () => {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('MyDatabase', 1);
