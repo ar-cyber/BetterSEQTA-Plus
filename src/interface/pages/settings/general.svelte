@@ -57,6 +57,8 @@
         state: $settingsState.bksliderinput,
         onChange: (value: number) => settingsState.bksliderinput = `${value}`
       }
+    },
+    {
     title: "Default News Page",
       description: "Change the default news page to your own!",
       id: 4,
