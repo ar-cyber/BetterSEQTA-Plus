@@ -57,11 +57,19 @@
         state: $settingsState.bksliderinput,
         onChange: (value: number) => settingsState.bksliderinput = `${value}`
       }
+    title: "Default News Page",
+      description: "Change the default news page to your own!.",
+      id: 4,
+      Component: TextInput,
+      props: {
+        state: $settingsState.defnews,
+        onChange: (value: string) => settingsState.defnews = `${value}`
+      }
     },
     {
       title: "Custom Theme Colour",
       description: "Customise the overall theme colour of SEQTA Learn.",
-      id: 4,
+      id: 5,
       Component: PickerSwatch,
       props: {
         onClick: showColourPicker
@@ -70,7 +78,7 @@
     {
       title: "Edit Sidebar Layout",
       description: "Customise the sidebar layout.",
-      id: 5,
+      id: 6,
       Component: Button,
       props: {
         onClick: () => browser.runtime.sendMessage({ type: 'currentTab', info: 'EditSidebar' }),
@@ -80,7 +88,7 @@
     {
       title: "Animations",
       description: "Enables animations on certain pages.",
-      id: 6,
+      id: 7,
       Component: Switch,
       props: {
         state: $settingsState.animations,
@@ -90,7 +98,7 @@
     {
       title: "Notification Collector",
       description: "Uncaps the 9+ limit for notifications, showing the real number.",
-      id: 7,
+      id: 8,
       Component: Switch,
       props: {
         state: $settingsState.notificationcollector,
@@ -100,7 +108,7 @@
     {
       title: "Assessment Average",
       description: "Shows your subject average for assessments.",
-      id: 8,
+      id: 9,
       Component: Switch,
       props: {
         state: $settingsState.assessmentsAverage,
@@ -110,7 +118,7 @@
     {
       title: "Lesson Alerts",
       description: "Sends a native browser notification ~5 minutes prior to lessons.",
-      id: 8,
+      id: 10,
       Component: Switch,
       props: {
         state: $settingsState.lessonalert,
@@ -120,7 +128,7 @@
     {
       title: "12 Hour Time",
       description: "Prefer 12 hour time format for SEQTA",
-      id: 9,
+      id: 11,
       Component: Switch,
       props: {
         state: $settingsState.timeFormat === "12",
@@ -130,7 +138,7 @@
     {
       title: "Default Page",
       description: "The page to load when SEQTA Learn is opened.",
-      id: 10,
+      id: 12,
       Component: Select,
       props: {
         state: $settingsState.defaultPage,
@@ -149,7 +157,7 @@
     {
       title: "BetterSEQTA+",
       description: "Enables BetterSEQTA+ features",
-      id: 11,
+      id: 13,
       Component: Switch,
       props: {
         state: $settingsState.onoff,
