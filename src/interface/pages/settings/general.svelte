@@ -58,9 +58,9 @@
         onChange: (value: number) => settingsState.bksliderinput = `${value}`
       }
     title: "Default News Page",
-      description: "Change the default news page to your own!.",
+      description: "Change the default news page to your own!",
       id: 4,
-      Component: TextInput,
+      Component: CodeEditor,
       props: {
         state: $settingsState.defnews,
         onChange: (value: string) => settingsState.defnews = `${value}`
