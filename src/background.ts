@@ -120,8 +120,7 @@ browser.runtime.onMessage.addListener((request: any, _sender: any, sendResponse:
         (date.getMonth() + 1) +
       '-' +
         (date.getDate() - 5);
-      const countrycode = geoRev.country( position.coords.latitude,position.coords.longitude )[0].isoAlpha2
-      const url = `https://newsfinder.sockycat.net/news/get/${countrycode}/${from}`;
+      const url = 'https://newsapi.org/v2/everything?domains=abc.net.au&from=$(fromstr)&apiKey=17c0da766ba347c89d094449504e3080'
       GetNews(sendResponse, url);
       
     }
