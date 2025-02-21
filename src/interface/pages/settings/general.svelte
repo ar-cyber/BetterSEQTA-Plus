@@ -129,6 +129,16 @@
       }
     },
     {
+      title: "Edit News URL",
+      description: "Edit the news URL. Quite bad and will be fixed later.",
+      id: 8,
+      Component: Button,
+      props: {
+        onClick: () => browser.runtime.sendMessage({ type: 'currentTab', info: 'EditNewsURL' }),
+        text: "Edit"
+      }
+    },
+    {
       title: "12 Hour Time",
       description: "Prefer 12 hour time format for SEQTA",
       id: 9,
