@@ -792,6 +792,16 @@ async function LoadPageElements(): Promise<void> {
       className: 'assessmentsWrapper',
     }, handleAssessments);
   }
+  if (settingsState.CustomMessage ?? true) {
+    eventManager.register('composeMessage', {
+      elementType: 'div',
+      className: 'uiSlidePane',
+      customCheck(element) {
+        return element.querySelector('.uiSlidePane > .pane > .header > h1')?.textContent === 'Compose message';
+      },
+    }, handleEmail        
+  }
+ 
 
   RegisterClickListeners();
 
@@ -3117,4 +3127,31 @@ async function handleAssessments(node: Element): Promise<void> {
 
   // Add the average assessment item
   addAverageAssessment();
+}
+async function handleEmail(node: Element): Promise<void> {
+  if (!(node instanceof HTMLElement)) return;
+
+  // Wait for the assessments wrapper to be mounted
+  if (!emailWrapper) return;
+  const [html, setHTML] = useState<string>("");
+ 
+  // Creates a new editor instance with some initial content.
+  const editor = useCreateBlockNote();
+ 
+  const onChange = async () => {
+    // Converts the editor's contents from Block objects to HTML and store to state.
+    const html = await editor.blocksToHTMLLossy(editor.document);
+    setHTML(html);
+  };
+ 
+  useEffect(() => {
+    // on mount, trigger initial conversion of the initial content to html
+    onChange();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+ 
+  element = stringToHTML(`
+  <BlockNoteView editor={editor} onChange={onChange} />
+  `)
+ 
 }
